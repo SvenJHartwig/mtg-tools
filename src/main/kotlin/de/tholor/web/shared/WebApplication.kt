@@ -1,4 +1,4 @@
-package de.tholor.web
+package de.tholor.web.shared
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class WebApplication
 
 fun main(args: Array<String>) {
-	runApplication<WebApplication>(*args)
+    runApplication<WebApplication>(*args)
 }
