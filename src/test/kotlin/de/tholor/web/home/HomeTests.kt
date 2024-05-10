@@ -14,5 +14,6 @@ class HomeTests {
         val homeController = HomeController()
         homeController.getData()
         assert(output.contains("In logger"))
+        assert(output.contains("Response Code: 200"))
     }
 }
