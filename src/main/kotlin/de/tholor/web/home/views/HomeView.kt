@@ -8,14 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired
 
 
 @Route("")
-class HomeView : RootLayout() {
+class HomeView @Autowired internal constructor(
+    private val homeController: IHomeController
+) : RootLayout() {
     private val getDataButton = Button("Get Data")
-    private lateinit var homeController: IHomeController
-
-    @Autowired
-    internal fun HomeView(homeController: IHomeController) {
-        this.homeController = homeController
-    }
 
     init {
         getDataButton.addClickListener {
