@@ -1,4 +1,4 @@
-package de.tholor.web.shared
+package de.tholor.web
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
