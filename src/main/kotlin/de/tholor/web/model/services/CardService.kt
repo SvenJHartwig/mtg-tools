@@ -11,7 +11,7 @@ class CardService @Autowired internal constructor(
 ) : ICardService {
 
     override fun createNewCard(): Boolean {
-        var newCard = Card(1L, "Test")
+        val newCard = Card(1L, "Test")
         cardRepository.save(newCard)
         return cardRepository.existsById(1)
     }
