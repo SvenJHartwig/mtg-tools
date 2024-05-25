@@ -1,4 +1,4 @@
-package de.tholor.web.home.controllers
+package de.tholor.web.pages.home.controllers
 
 import de.tholor.web.model.services.ICardService
 import de.tholor.web.shared.logger
