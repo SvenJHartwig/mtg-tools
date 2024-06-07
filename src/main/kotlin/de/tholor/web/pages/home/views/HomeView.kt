@@ -17,6 +17,6 @@ class HomeView @Autowired internal constructor(
         getDataButton.addClickListener {
             homeController.getData()
         }
-        super.add(getDataButton)
+        add(getDataButton)
     }
 }

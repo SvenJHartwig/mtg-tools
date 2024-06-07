@@ -1,6 +1,12 @@
 package de.tholor.web.shared
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 
-open class RootLayout : VerticalLayout() {
+open class RootLayout : HorizontalLayout() {
+    private val navLayout = NavigationLayout()
+
+    init {
+        navLayout.maxWidth = "100px"
+        addComponentAsFirst(navLayout)
+    }
 }
