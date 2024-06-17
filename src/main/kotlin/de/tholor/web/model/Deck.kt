@@ -14,14 +14,11 @@ class Deck(
 ) : Serializable {
     private lateinit var cardList: List<Card>
 
-    class StatsAgainst : Serializable {
-        private var wins: Int = 0
-        private var losses: Int = 0
-        private var draws: Int = 0
+    data class StatsAgainst(var wins: Int, var losses: Int, var draws: Int) : Serializable {
     }
 
     @Transient
-    private lateinit var stats: Map<Long, StatsAgainst>
+    val stats: MutableMap<Long, StatsAgainst> = mutableMapOf()
 
     override fun equals(other: Any?): Boolean {
         if (other == null) {

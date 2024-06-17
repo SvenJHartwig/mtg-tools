@@ -3,7 +3,7 @@ package de.tholor.web.stats
 import de.tholor.web.model.Deck
 import de.tholor.web.model.repositories.DeckRepository
 import de.tholor.web.model.services.DeckService
-import de.tholor.web.pages.stats.components.DeckScore
+import de.tholor.web.pages.stats.components.DeckScoreModel
 import de.tholor.web.pages.stats.controllers.StatsController
 import io.ktor.util.reflect.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class StatsTests() {
+class StatsTests {
     class DeckRepoImpl : DeckRepository {
         val deckList = mutableListOf<Deck>()
         override fun findAllByNameIn(name: List<String>): List<Deck> {
@@ -19,14 +19,25 @@ class StatsTests() {
         }
 
         override fun <S : Deck?> save(entity: S & Any): S & Any {
-            if (entity.instanceOf(Deck::class)) {
+            if (entity.instanceOf(Deck::class) && deckList.none { deck -> deck.name == entity.name }) {
                 deckList.add(entity)
             }
             return entity
         }
 
         override fun <S : Deck?> saveAll(entities: MutableIterable<S>): MutableIterable<S> {
-            TODO("Not yet implemented")
+            entities.forEach { entity ->
+                if (entity != null) {
+                    if (entity.instanceOf(Deck::class) && deckList.none { deck -> deck.name == entity.name }) {
+                        if (entity.id.toInt() == -1) {
+                            deckList.add(Deck(deckList.size + 1.toLong(), entity.name))
+                        } else {
+                            deckList.add(entity)
+                        }
+                    }
+                }
+            }
+            return deckList as MutableIterable<S>
         }
 
         override fun findAll(): MutableIterable<Deck> {
@@ -101,6 +112,17 @@ class StatsTests() {
     fun testAddScore() {
         statsController.addScore(emptyList())
         assertEquals(emptyList<Deck>(), deckRepository.findAll())
-        statsController.addScore(listOf(DeckScore(0)))
+        statsController.addScore(listOf(DeckScoreModel("Deck1", 0)))
+        assertEquals(listOf(Deck(1, "Deck1")), deckRepository.findAll())
+        statsController.addScore(listOf(DeckScoreModel("Deck1", 0), DeckScoreModel("Deck2", 0)))
+        assertEquals(listOf(Deck(1, "Deck1"), Deck(2, "Deck2")), deckRepository.findAll())
+        assertEquals(mutableMapOf(Pair(2L, Deck.StatsAgainst(0, 0, 0))), deckRepository.findAll().toList()[0].stats)
+        assertEquals(mutableMapOf(Pair(1L, Deck.StatsAgainst(0, 0, 0))), deckRepository.findAll().toList()[1].stats)
+        statsController.addScore(listOf(DeckScoreModel("Deck1", 1), DeckScoreModel("Deck2", 0)))
+        assertEquals(mutableMapOf(Pair(2L, Deck.StatsAgainst(1, 0, 0))), deckRepository.findAll().toList()[0].stats)
+        assertEquals(mutableMapOf(Pair(1L, Deck.StatsAgainst(0, 1, 0))), deckRepository.findAll().toList()[1].stats)
+        statsController.addScore(listOf(DeckScoreModel("Deck1", 1), DeckScoreModel("Deck2", 0)))
+        assertEquals(mutableMapOf(Pair(2L, Deck.StatsAgainst(2, 0, 0))), deckRepository.findAll().toList()[0].stats)
+        assertEquals(mutableMapOf(Pair(1L, Deck.StatsAgainst(0, 2, 0))), deckRepository.findAll().toList()[1].stats)
     }
 }

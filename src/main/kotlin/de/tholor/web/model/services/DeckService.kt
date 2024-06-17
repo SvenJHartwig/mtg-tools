@@ -14,6 +14,10 @@ class DeckService @Autowired internal constructor(
         return deckRepository.findAll().toList()
     }
 
+    override fun save(vararg decks: Deck): MutableIterable<Deck> {
+        return deckRepository.saveAll(decks.toList())
+    }
+
     fun listDecksWithNames(names: List<String>): List<Deck> {
         return deckRepository.findAllByNameIn(names).toList()
     }

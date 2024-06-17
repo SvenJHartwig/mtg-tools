@@ -5,5 +5,6 @@ import org.springframework.stereotype.Service
 
 @Service
 interface IDeckService {
-    public fun listDecks(): List<Deck>
+    fun listDecks(): List<Deck>
+    fun save(vararg decks: Deck): MutableIterable<Deck>
 }

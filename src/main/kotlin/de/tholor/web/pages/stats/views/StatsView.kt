@@ -23,7 +23,7 @@ class StatsView @Autowired internal constructor(private val statsController: ISt
     init {
         statsGrid.setId("stats-view-stats-grid")
         addScoreButton.addClickListener { _ ->
-            statsController.addScore(deckScores)
+            statsController.addScore(deckScores.map { deckScore -> deckScore.model })
         }
         add(statsGrid, decksLayout, addScoreButton)
     }
