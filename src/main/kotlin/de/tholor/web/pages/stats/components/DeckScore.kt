@@ -11,6 +11,15 @@ class DeckScore(number: Int) : VerticalLayout() {
     init {
         deckName.label = "Name $number. Deck"
         deckScore.label = "Siege $number. Deck"
+        deckScore.allowedCharPattern = "[0-9*]"
         add(deckName, deckScore)
+    }
+
+    fun getName(): String {
+        return deckName.value
+    }
+
+    fun getScore(): Double {
+        return deckScore.value
     }
 }

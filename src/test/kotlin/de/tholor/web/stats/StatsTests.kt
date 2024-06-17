@@ -3,6 +3,7 @@ package de.tholor.web.stats
 import de.tholor.web.model.Deck
 import de.tholor.web.model.repositories.DeckRepository
 import de.tholor.web.model.services.DeckService
+import de.tholor.web.pages.stats.components.DeckScore
 import de.tholor.web.pages.stats.controllers.StatsController
 import io.ktor.util.reflect.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -13,6 +14,10 @@ import java.util.*
 class StatsTests() {
     class DeckRepoImpl : DeckRepository {
         val deckList = mutableListOf<Deck>()
+        override fun findAllByNameIn(name: List<String>): List<Deck> {
+            return emptyList()
+        }
+
         override fun <S : Deck?> save(entity: S & Any): S & Any {
             if (entity.instanceOf(Deck::class)) {
                 deckList.add(entity)
@@ -76,5 +81,26 @@ class StatsTests() {
         assertEquals(1, statsController.listDecks().size)
         deckRepository.save(Deck(2, "Deck2"))
         assertEquals(2, statsController.listDecks().size)
+    }
+
+    @Test
+    fun testBuildDeckList() {
+        assertEquals(emptyList<Deck>(), statsController.buildDeckList(emptyList(), emptyList()))
+        assertEquals(listOf(Deck(-1, "Deck1")), statsController.buildDeckList(listOf("Deck1"), emptyList()))
+        assertEquals(
+            listOf(Deck(-1, "Deck1"), Deck(-1, "Deck2")),
+            statsController.buildDeckList(listOf("Deck1", "Deck2"), emptyList())
+        )
+        assertEquals(
+            listOf(Deck(-1, "Deck1"), Deck(1, "Deck3")),
+            statsController.buildDeckList(listOf("Deck1", "Deck3"), listOf(Deck(1, "Deck3")))
+        )
+    }
+
+    @Test
+    fun testAddScore() {
+        statsController.addScore(emptyList())
+        assertEquals(emptyList<Deck>(), deckRepository.findAll())
+        statsController.addScore(listOf(DeckScore(0)))
     }
 }

@@ -13,4 +13,8 @@ class DeckService @Autowired internal constructor(
     override fun listDecks(): List<Deck> {
         return deckRepository.findAll().toList()
     }
+
+    fun listDecksWithNames(names: List<String>): List<Deck> {
+        return deckRepository.findAllByNameIn(names).toList()
+    }
 }

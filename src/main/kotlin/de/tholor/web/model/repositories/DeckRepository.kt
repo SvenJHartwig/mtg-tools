@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface DeckRepository : CrudRepository<Deck, Long> {
+    fun findAllByNameIn(name: List<String>): List<Deck>
 }
