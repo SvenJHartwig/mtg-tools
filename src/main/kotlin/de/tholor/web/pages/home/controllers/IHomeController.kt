@@ -1,4 +1,4 @@
-package de.tholor.web.home.controllers
+package de.tholor.web.pages.home.controllers
 
 import org.springframework.stereotype.Controller
 
