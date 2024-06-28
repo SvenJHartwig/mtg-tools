@@ -26,19 +26,18 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
             deckList.forEach { deck2 ->
                 if (deck2 != deck) {
                     if (deck.stats[deck2.id] == null) {
-                        deck.stats[deck2.id] = Deck.StatsAgainst(scoresMap[deck.name] ?: 0, 0, 0)
+                        deck.stats[deck2.id] = Deck.StatsAgainst(-1, scoresMap[deck.name] ?: 0, 0, 0)
                     } else {
                         deck.stats[deck2.id]!!.wins += scoresMap[deck.name] ?: 0
                     }
                     if (deck2.stats[deck.id] == null) {
-                        deck2.stats[deck.id] = Deck.StatsAgainst(0, scoresMap[deck.name] ?: 0, 0)
+                        deck2.stats[deck.id] = Deck.StatsAgainst(-1, 0, scoresMap[deck.name] ?: 0, 0)
                     } else {
                         deck2.stats[deck.id]!!.losses += scoresMap[deck.name] ?: 0
                     }
                 }
             }
         }
-
         deckService.save(*deckList.toTypedArray())
     }
 
