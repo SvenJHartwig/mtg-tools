@@ -3,6 +3,7 @@ package de.tholor.web.pages.stats.controllers
 import de.tholor.web.model.Deck
 import de.tholor.web.model.services.DeckService
 import de.tholor.web.pages.stats.components.DeckScoreModel
+import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 
@@ -38,7 +39,9 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
                 }
             }
         }
-        deckService.save(*deckList.toTypedArray())
+        runBlocking {
+            deckService.save(*deckList.toTypedArray())
+        }
     }
 
     override fun buildDeckList(allNames: List<String>, existingDecks: List<Deck>): List<Deck> {

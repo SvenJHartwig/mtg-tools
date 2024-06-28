@@ -17,13 +17,14 @@ class DeckService @Autowired internal constructor(
     }
 
     override fun save(vararg decks: Deck): MutableIterable<Deck> {
-        decks.forEach { deck ->
+        val deckList = decks.toList()
+        deckList.parallelStream().forEach { deck ->
             deck.stats.forEach {
                 val savedStat = statsRepository.save(it.value)
                 deck.stats[it.key] = savedStat
             }
         }
-        return deckRepository.saveAll(decks.toList())
+        return deckRepository.saveAll(deckList)
     }
 
     fun listDecksWithNames(names: List<String>): List<Deck> {
