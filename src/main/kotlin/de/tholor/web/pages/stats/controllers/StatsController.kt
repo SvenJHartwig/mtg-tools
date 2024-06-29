@@ -66,4 +66,8 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
         return Deck.StatsAgainst(0, wins, losses, draws)
     }
 
+    override fun findDeckNameByID(id: Long): String {
+        return deckService.findDeckNameByID(id)
+    }
+
 }

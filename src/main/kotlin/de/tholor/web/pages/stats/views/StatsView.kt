@@ -19,7 +19,7 @@ class StatsView @Autowired internal constructor(private val statsController: ISt
     private val statsGrid = Grid<Deck>()
     private val deckScores = listOf(DeckScore(1), DeckScore(2))
     private val decksLayout = HorizontalLayout(deckScores[0], deckScores[1])
-    private val addScoreButton = Button("Ergebnis hinzufügen")
+    private val addScoreButton = Button("Add result")
 
     init {
         statsGrid.setId("stats-view-stats-grid")
@@ -33,7 +33,12 @@ class StatsView @Autowired internal constructor(private val statsController: ISt
         statsGrid.addColumn { deck ->
             statsController.accumulateStats(deck.stats).draws
         }.setHeader("Draws")
-        statsGrid.addItemDoubleClickListener { itemDoubleClickEvent -> DeckDetailsDialog(itemDoubleClickEvent.item).open() }
+        statsGrid.addItemDoubleClickListener { itemDoubleClickEvent ->
+            DeckDetailsDialog(
+                itemDoubleClickEvent.item,
+                statsController
+            ).open()
+        }
         addScoreButton.addClickListener { _ ->
             statsController.addScore(deckScores.map { deckScore -> deckScore.model })
             updateValues()

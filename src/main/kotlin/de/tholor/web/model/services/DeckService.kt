@@ -27,6 +27,13 @@ class DeckService @Autowired internal constructor(
         return deckRepository.saveAll(deckList)
     }
 
+    override fun findDeckNameByID(id: Long): String {
+        val deck = deckRepository.findById(id)
+        if (deck.isPresent)
+            return deck.get().name
+        return ""
+    }
+
     fun listDecksWithNames(names: List<String>): List<Deck> {
         return deckRepository.findAllByNameIn(names).toList()
     }
