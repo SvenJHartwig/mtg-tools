@@ -1,25 +1,25 @@
 package de.tholor.web.model
 
 import io.ktor.util.reflect.*
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.Transient
+import jakarta.persistence.*
 import java.io.Serializable
 
 @Entity
 class Deck(
     @Id
+    @GeneratedValue
     val id: Long,
     val name: String
 ) : Serializable {
     @ManyToMany
     private lateinit var cardList: List<Card>
 
-    data class StatsAgainst(var wins: Int, var losses: Int, var draws: Int) : Serializable {
-    }
+    @Entity
+    data class StatsAgainst(@Id @GeneratedValue val id: Long, var wins: Int, var losses: Int, var draws: Int) :
+        Serializable
 
-    @Transient
+    @ElementCollection
+    @OneToMany(fetch = FetchType.EAGER)
     val stats: MutableMap<Long, StatsAgainst> = mutableMapOf()
 
     override fun equals(other: Any?): Boolean {
