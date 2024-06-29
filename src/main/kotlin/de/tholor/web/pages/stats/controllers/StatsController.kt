@@ -54,4 +54,16 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
         return result
     }
 
+    override fun accumulateStats(stats: Map<Long, Deck.StatsAgainst>): Deck.StatsAgainst {
+        var wins = 0
+        var losses = 0
+        var draws = 0
+        stats.forEach { entry ->
+            wins += entry.value.wins
+            losses += entry.value.losses
+            draws += entry.value.draws
+        }
+        return Deck.StatsAgainst(0, wins, losses, draws)
+    }
+
 }

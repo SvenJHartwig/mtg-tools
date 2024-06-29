@@ -10,19 +10,11 @@ class DeckScore(number: Int) : VerticalLayout() {
     val model = DeckScoreModel()
 
     init {
-        deckName.label = "Name $number. Deck"
-        deckScore.label = "Siege $number. Deck"
+        deckName.label = "Name $number. deck"
+        deckScore.label = "Wins $number. deck"
         deckScore.allowedCharPattern = "[0-9*]"
         deckName.addValueChangeListener { v -> model.deckName = v.value }
         deckScore.addValueChangeListener { v -> model.deckScore = v.value.toInt() }
         add(deckName, deckScore)
-    }
-
-    fun getName(): String {
-        return model.deckName
-    }
-
-    fun getScore(): Int {
-        return model.deckScore
     }
 }
