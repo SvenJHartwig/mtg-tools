@@ -15,11 +15,17 @@ class Deck(
     private lateinit var cardList: List<Card>
 
     @Entity
-    data class StatsAgainst(@Id @GeneratedValue val id: Long, var wins: Int, var losses: Int, var draws: Int) :
+    data class StatsAgainst(
+        @Id @GeneratedValue val id: Long,
+        @ManyToOne val deck: Deck,
+        var wins: Int,
+        var losses: Int,
+        var draws: Int
+    ) :
         Serializable
 
     @ElementCollection
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "deck", fetch = FetchType.EAGER, orphanRemoval = true)
     val stats: MutableMap<Long, StatsAgainst> = mutableMapOf()
 
     override fun equals(other: Any?): Boolean {

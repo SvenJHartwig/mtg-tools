@@ -169,13 +169,53 @@ class StatsTests {
         assertEquals(listOf(Deck(1, "Deck1")), deckRepository.findAll())
         statsController.addScore(listOf(DeckScoreModel("Deck1", 0), DeckScoreModel("Deck2", 0)))
         assertEquals(listOf(Deck(1, "Deck1"), Deck(2, "Deck2")), deckRepository.findAll())
-        assertEquals(mutableMapOf(Pair(2L, Deck.StatsAgainst(-1, 0, 0, 0))), deckRepository.findAll().toList()[0].stats)
-        assertEquals(mutableMapOf(Pair(1L, Deck.StatsAgainst(-1, 0, 0, 0))), deckRepository.findAll().toList()[1].stats)
+        assertEquals(
+            mutableMapOf(Pair(2L, Deck.StatsAgainst(-1, Deck(1, "Deck1"), 0, 0, 0))),
+            deckRepository.findAll().toList()[0].stats
+        )
+        assertEquals(
+            mutableMapOf(Pair(1L, Deck.StatsAgainst(-1, Deck(2, "Deck2"), 0, 0, 0))),
+            deckRepository.findAll().toList()[1].stats
+        )
         statsController.addScore(listOf(DeckScoreModel("Deck1", 1), DeckScoreModel("Deck2", 0)))
-        assertEquals(mutableMapOf(Pair(2L, Deck.StatsAgainst(-1, 1, 0, 0))), deckRepository.findAll().toList()[0].stats)
-        assertEquals(mutableMapOf(Pair(1L, Deck.StatsAgainst(-1, 0, 1, 0))), deckRepository.findAll().toList()[1].stats)
+        assertEquals(
+            mutableMapOf(Pair(2L, Deck.StatsAgainst(-1, Deck(1, "Deck1"), 1, 0, 0))),
+            deckRepository.findAll().toList()[0].stats
+        )
+        assertEquals(
+            mutableMapOf(Pair(1L, Deck.StatsAgainst(-1, Deck(2, "Deck2"), 0, 1, 0))),
+            deckRepository.findAll().toList()[1].stats
+        )
         statsController.addScore(listOf(DeckScoreModel("Deck1", 1), DeckScoreModel("Deck2", 0)))
-        assertEquals(mutableMapOf(Pair(2L, Deck.StatsAgainst(-1, 2, 0, 0))), deckRepository.findAll().toList()[0].stats)
-        assertEquals(mutableMapOf(Pair(1L, Deck.StatsAgainst(-1, 0, 2, 0))), deckRepository.findAll().toList()[1].stats)
+        assertEquals(
+            mutableMapOf(Pair(2L, Deck.StatsAgainst(-1, Deck(1, "Deck1"), 2, 0, 0))),
+            deckRepository.findAll().toList()[0].stats
+        )
+        assertEquals(
+            mutableMapOf(Pair(1L, Deck.StatsAgainst(-1, Deck(2, "Deck2"), 0, 2, 0))),
+            deckRepository.findAll().toList()[1].stats
+        )
+    }
+
+    @Test
+    fun accumulateStatsTest() {
+        assertEquals(Deck.StatsAgainst(0, Deck(-1, ""), 0, 0, 0), statsController.accumulateStats(emptyMap()))
+        assertEquals(
+            Deck.StatsAgainst(0, Deck(-1, ""), 0, 0, 0),
+            statsController.accumulateStats(mapOf(Pair(0, Deck.StatsAgainst(0, Deck(-1, ""), 0, 0, 0))))
+        )
+        assertEquals(
+            Deck.StatsAgainst(0, Deck(-1, ""), 1, 0, 0),
+            statsController.accumulateStats(mapOf(Pair(0, Deck.StatsAgainst(0, Deck(-1, ""), 1, 0, 0))))
+        )
+        assertEquals(
+            Deck.StatsAgainst(0, Deck(-1, ""), 1, 2, 0),
+            statsController.accumulateStats(
+                mapOf(
+                    Pair(0, Deck.StatsAgainst(0, Deck(-1, ""), 1, 0, 0)),
+                    Pair(1, Deck.StatsAgainst(0, Deck(-1, ""), 0, 2, 0))
+                )
+            )
+        )
     }
 }
