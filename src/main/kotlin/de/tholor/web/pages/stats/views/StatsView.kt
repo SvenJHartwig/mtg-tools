@@ -37,7 +37,7 @@ class StatsView @Autowired internal constructor(private val statsController: ISt
             DeckDetailsDialog(
                 itemDoubleClickEvent.item,
                 statsController
-            ).open()
+            ) { updateValues() }.open()
         }
         addScoreButton.addClickListener { _ ->
             statsController.addScore(deckScores.map { deckScore -> deckScore.model })

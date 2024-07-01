@@ -34,6 +34,19 @@ class DeckService @Autowired internal constructor(
         return ""
     }
 
+    override fun deleteDeck(deck: Deck) {
+        val otherDeckIds = mutableSetOf<Long>()
+        deck.stats.forEach {
+            otherDeckIds.add(it.key)
+        }
+        val otherDecks = deckRepository.findAllById(otherDeckIds)
+        val otherDeckStats = otherDecks.map {
+            it.stats[deck.id]
+        }.toList()
+        statsRepository.deleteAll(otherDeckStats)
+        deckRepository.delete(deck)
+    }
+
     fun listDecksWithNames(names: List<String>): List<Deck> {
         return deckRepository.findAllByNameIn(names).toList()
     }

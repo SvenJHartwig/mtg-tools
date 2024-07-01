@@ -27,12 +27,12 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
             deckList.forEach { deck2 ->
                 if (deck2 != deck) {
                     if (deck.stats[deck2.id] == null) {
-                        deck.stats[deck2.id] = Deck.StatsAgainst(-1, scoresMap[deck.name] ?: 0, 0, 0)
+                        deck.stats[deck2.id] = Deck.StatsAgainst(-1, deck, scoresMap[deck.name] ?: 0, 0, 0)
                     } else {
                         deck.stats[deck2.id]!!.wins += scoresMap[deck.name] ?: 0
                     }
                     if (deck2.stats[deck.id] == null) {
-                        deck2.stats[deck.id] = Deck.StatsAgainst(-1, 0, scoresMap[deck.name] ?: 0, 0)
+                        deck2.stats[deck.id] = Deck.StatsAgainst(-1, deck2, 0, scoresMap[deck.name] ?: 0, 0)
                     } else {
                         deck2.stats[deck.id]!!.losses += scoresMap[deck.name] ?: 0
                     }
@@ -63,11 +63,15 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
             losses += entry.value.losses
             draws += entry.value.draws
         }
-        return Deck.StatsAgainst(0, wins, losses, draws)
+        return Deck.StatsAgainst(0, Deck(-1, ""), wins, losses, draws)
     }
 
     override fun findDeckNameByID(id: Long): String {
         return deckService.findDeckNameByID(id)
+    }
+
+    override fun deleteDeck(deck: Deck) {
+        deckService.deleteDeck(deck)
     }
 
 }

@@ -6,8 +6,10 @@ import com.vaadin.flow.component.grid.Grid
 import de.tholor.web.model.Deck
 import de.tholor.web.pages.stats.controllers.IStatsController
 
-class DeckDetailsDialog(val deck: Deck, private val statsController: IStatsController) : Dialog() {
+class DeckDetailsDialog(val deck: Deck, private val statsController: IStatsController, val onDelete: () -> Unit) :
+    Dialog() {
     private val statsGrid = Grid<Pair<Long, Deck.StatsAgainst>>()
+    private val deleteDeckButton = Button("Delete deck")
 
     init {
         statsGrid.setItems(deck.stats.map { entry -> Pair(entry.key, entry.value) }.toList())
@@ -24,7 +26,13 @@ class DeckDetailsDialog(val deck: Deck, private val statsController: IStatsContr
             stats.second.draws
         }.setHeader("Draws")
 
-        add(statsGrid)
+        deleteDeckButton.addClickListener {
+            statsController.deleteDeck(deck)
+            onDelete()
+            close()
+        }
+
+        add(statsGrid, deleteDeckButton)
         val cancelButton = Button("Cancel") { _ -> close() }
         footer.add(cancelButton)
         minWidth = "500px"
