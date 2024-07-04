@@ -3,6 +3,8 @@ package de.tholor.web.pages.stats.views
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.textfield.NumberField
 import com.vaadin.flow.router.BeforeEnterEvent
 import com.vaadin.flow.router.BeforeEnterObserver
 import com.vaadin.flow.router.Route
@@ -17,9 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired
 class StatsView @Autowired internal constructor(private val statsController: IStatsController) : RootLayout(),
     BeforeEnterObserver {
     private val statsGrid = Grid<Deck>()
-    private val deckScores = listOf(DeckScore(1), DeckScore(2))
-    private val decksLayout = HorizontalLayout(deckScores[0], deckScores[1])
+    private val numberOfDecks = NumberField()
+    private val changeDeckNumber = Button("Change number of decks")
+    private val numberLayout = VerticalLayout(numberOfDecks, changeDeckNumber)
+    private val deckScores = mutableListOf(DeckScore(1), DeckScore(2))
     private val addScoreButton = Button("Add result")
+    private val deckScoreLayout = HorizontalLayout(deckScores[0], deckScores[1])
+    private val decksLayout = HorizontalLayout(numberLayout, deckScoreLayout, addScoreButton)
+    private val content = VerticalLayout(statsGrid, decksLayout)
 
     init {
         statsGrid.setId("stats-view-stats-grid")
@@ -43,7 +50,17 @@ class StatsView @Autowired internal constructor(private val statsController: ISt
             statsController.addScore(deckScores.map { deckScore -> deckScore.model })
             updateValues()
         }
-        add(statsGrid, decksLayout, addScoreButton)
+        changeDeckNumber.addClickListener {
+            while (deckScores.size < numberOfDecks.value.toInt()) {
+                deckScores.add(DeckScore(deckScores.size + 1))
+                deckScoreLayout.add(deckScores.last())
+            }
+            while (deckScores.size > numberOfDecks.value.toInt()) {
+                deckScoreLayout.remove(deckScores.last())
+                deckScores.removeLast()
+            }
+        }
+        add(content)
     }
 
     private fun updateValues() {
