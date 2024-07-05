@@ -4,5 +4,5 @@ import org.springframework.stereotype.Controller
 
 @Controller
 interface IHomeController {
-    fun getData()
+    fun writeRequestToDatabase(s: String)
 }
