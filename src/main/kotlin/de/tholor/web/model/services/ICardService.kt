@@ -1,8 +1,9 @@
 package de.tholor.web.model.services
 
+import de.tholor.web.model.CardList
 import org.springframework.stereotype.Service
 
 @Service
 interface ICardService {
-    fun createNewCard(): Boolean
+    fun save(cards: CardList)
 }
