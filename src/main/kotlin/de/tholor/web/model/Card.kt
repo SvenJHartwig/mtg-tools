@@ -1,10 +1,7 @@
 package de.tholor.web.model
 
 import io.ktor.util.*
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import kotlinx.serialization.Serializable
 
 @Entity
@@ -13,7 +10,7 @@ import kotlinx.serialization.Serializable
 data class Card(
     @Id
     @GeneratedValue
-    val cardId: Long = -1,
+    var cardId: Long = -1,
     val artist: String = "",
     val artist_ids: List<String> = listOf(),
     val booster: Boolean = false,
@@ -40,8 +37,8 @@ data class Card(
     val keywords: List<String> = listOf(),
     val lang: String = "",
     val layout: String = "",
-//    @OneToOne
-//    val legalities: Legalities = Legalities(),
+    @OneToOne
+    var legalities: Legalities = Legalities(),
     val mana_cost: String = "",
     val mtgo_foil_id: Int = 0,
     val mtgo_id: Int = 0,

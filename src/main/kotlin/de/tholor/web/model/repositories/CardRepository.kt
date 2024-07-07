@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CardRepository : CrudRepository<Card, Long> {
+    fun existsByName(name: String): Boolean
+    fun findByName(name: String): Card
 }

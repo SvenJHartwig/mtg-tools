@@ -1,6 +1,7 @@
 package de.tholor.web.home
 
 import de.tholor.web.mockComponents.MockCardRepo
+import de.tholor.web.mockComponents.MockLegalityRepo
 import de.tholor.web.model.Card
 import de.tholor.web.model.services.CardService
 import de.tholor.web.pages.home.controllers.HomeController
@@ -12,7 +13,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 @ExtendWith(OutputCaptureExtension::class)
 class HomeTests {
     private val mockCardRepo = MockCardRepo()
-    private val homeController = HomeController(CardService(mockCardRepo))
+    private val homeController = HomeController(CardService(mockCardRepo, MockLegalityRepo()))
 
     @Test
     fun testWriteRequestToDatabase() {
