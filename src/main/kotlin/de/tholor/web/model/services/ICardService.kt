@@ -6,4 +6,5 @@ import org.springframework.stereotype.Service
 @Service
 interface ICardService {
     fun save(cards: CardList)
+    fun isStandardLegal(name: String): Boolean
 }

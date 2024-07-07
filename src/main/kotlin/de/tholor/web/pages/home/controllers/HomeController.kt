@@ -23,7 +23,7 @@ class HomeController @Autowired internal constructor(
     private val json = Json { coerceInputValues = true; ignoreUnknownKeys = true }
 
     override fun writeRequestToDatabase(s: String) {
-        if (s.isNullOrEmpty()) {
+        if (s.isEmpty()) {
             return
         }
         val response: HttpResponse
@@ -34,8 +34,10 @@ class HomeController @Autowired internal constructor(
                     append(HttpHeaders.Accept, "text/json")
                 }
             }
-            val cards = json.decodeFromString<CardList>(response.bodyAsText())
-            cardService.save(cards)
+            if (response.status.isSuccess()) {
+                val cards = json.decodeFromString<CardList>(response.bodyAsText())
+                cardService.save(cards)
+            }
         }
     }
 
