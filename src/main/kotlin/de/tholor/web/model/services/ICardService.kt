@@ -1,5 +1,6 @@
 package de.tholor.web.model.services
 
+import de.tholor.web.model.Card
 import de.tholor.web.model.CardList
 import org.springframework.stereotype.Service
 
@@ -17,4 +18,5 @@ interface ICardService {
      * Executes a scryfall lookup with the given search string.
      */
     fun writeRequestToDatabase(s: String)
+    fun listCards(): List<Card>
 }

@@ -3,6 +3,7 @@ package de.tholor.web.model
 import io.ktor.util.*
 import jakarta.persistence.*
 import kotlinx.serialization.Serializable
+import org.hibernate.validator.constraints.Length
 
 @Entity
 @Table(name = "card")
@@ -47,6 +48,7 @@ data class Card(
     val nonfoil: Boolean = false,
     val `object`: String = "",
     val oracle_id: String = "",
+    @Length(max = 2048)
     val oracle_text: String = "",
     val oversized: Boolean = false,
     val power: String = "",

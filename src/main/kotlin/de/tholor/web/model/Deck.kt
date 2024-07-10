@@ -11,8 +11,8 @@ class Deck(
     val id: Long,
     val name: String
 ) : Serializable {
-    @ManyToMany
-    private lateinit var cardList: List<Card>
+    @ManyToMany(fetch = FetchType.EAGER)
+    var cardList: MutableList<Card> = mutableListOf()
 
     @Entity
     data class StatsAgainst(
@@ -39,7 +39,4 @@ class Deck(
         return otherDeck.id == this.id && other.name == this.name
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
 }

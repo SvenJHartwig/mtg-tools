@@ -1,5 +1,6 @@
 package de.tholor.web.model.services
 
+import de.tholor.web.model.Card
 import de.tholor.web.model.CardList
 import de.tholor.web.model.repositories.CardRepository
 import de.tholor.web.model.repositories.LegalityRepository
@@ -48,7 +49,6 @@ class CardService @Autowired internal constructor(
             }
             return false
         }
-        return false
     }
 
     override fun writeRequestToDatabase(s: String) {
@@ -68,5 +68,9 @@ class CardService @Autowired internal constructor(
                 save(cards)
             }
         }
+    }
+
+    override fun listCards(): List<Card> {
+        return cardRepository.findAll().toList()
     }
 }
