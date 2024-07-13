@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service
 @Service
 class DeckService @Autowired internal constructor(
     private val deckRepository: DeckRepository,
-    private val statsRepository: StatsRepository
+    private val statsRepository: StatsRepository,
+    private val cardService: CardService
 ) : IDeckService {
 
     override fun listDecks(): List<Deck> {
@@ -45,6 +46,40 @@ class DeckService @Autowired internal constructor(
         }.toList()
         statsRepository.deleteAll(otherDeckStats)
         deckRepository.delete(deck)
+    }
+
+    override fun isStandardLegal(deck: Deck): Boolean {
+        if (deck.cardList.size < 60)
+            return false
+        var foundNonLegal = false
+        val cardsMap = mutableMapOf<String, Int>()
+        deck.cardList.forEach {
+            if (cardsMap[it.name] == null) {
+                cardsMap[it.name] = 1
+            } else {
+                cardsMap[it.name] = cardsMap[it.name]!! + 1
+            }
+            foundNonLegal = !cardService.isStandardLegal(it.name)
+            if (foundNonLegal) {
+                return false
+            }
+        }
+        return !cardsMap.any {
+            !listOf(
+                "Island",
+                "Plains",
+                "Mountain",
+                "Swamp",
+                "Forest",
+                "Snow-Covered Island",
+                "Snow-Covered Plains",
+                "Snow-Covered Mountain",
+                "Snow-Covered Swamp",
+                "Snow-Covered Forest",
+                "Wastes",
+                "Snow-Covered Wastes"
+            ).contains(it.key) && it.value > 4
+        }
     }
 
     fun listDecksWithNames(names: List<String>): List<Deck> {

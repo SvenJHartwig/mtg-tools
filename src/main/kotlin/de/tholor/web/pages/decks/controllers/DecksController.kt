@@ -46,4 +46,8 @@ class DecksController @Autowired internal constructor(
         deck.cardList.remove(card)
         deckService.save(deck)
     }
+
+    override fun isStandardLegal(deck: Deck): Boolean {
+        return deckService.isStandardLegal(deck)
+    }
 }

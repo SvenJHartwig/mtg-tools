@@ -9,7 +9,7 @@ import java.util.*
 class MockCardRepo : CardRepository {
     val cardList = mutableListOf<Card>()
     override fun existsByName(name: String): Boolean {
-        return name == "Sheoldred" || name == "Dwarven soldier" || cardList.size > 0 && name == "Resolute Reinforcements"
+        return name == "Island" || name == "Sheoldred" || name == "Dwarven soldier" || cardList.size > 0 && name == "Resolute Reinforcements"
     }
 
     override fun findByName(name: String): Card {
@@ -21,6 +21,9 @@ class MockCardRepo : CardRepository {
         }
         if (cardList.size > 0) {
             return Card(cardId = 3, name = "Resolute Reinforcements", legalities = Legalities(standard = "legal"))
+        }
+        if (name == "Island") {
+            return Card(cardId = 4, name = "Island", legalities = Legalities(standard = "legal"))
         }
         return Card()
     }

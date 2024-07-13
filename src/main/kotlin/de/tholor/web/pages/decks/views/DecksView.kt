@@ -3,6 +3,7 @@ package de.tholor.web.pages.decks.views
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
@@ -31,19 +32,18 @@ class DecksView @Autowired internal constructor(
     private val addCardText = ComboBox<Card>()
     private val addCardButton = Button("Add card")
     private val addCardLayout = HorizontalLayout(addCardText, addCardButton)
-    private val cardLayout = VerticalLayout(cardGrid, addCardLayout)
+    private val standardLegalLabel = Div("")
+    private val cardLayout = VerticalLayout(cardGrid, addCardLayout, standardLegalLabel)
     private val content = HorizontalLayout(deckLayout, cardLayout)
     private var selectedDeck: Deck? = null
 
     init {
         deckGrid.addColumn { deck -> deck.name }.setHeader("Deck")
         deckGrid.addItemClickListener {
-            val cardGridMap = decksController.buildCardRowMap(it.item)
-            cardGrid.setItems(cardGridMap.values)
-            cardLayout.isVisible = true
             selectedDeck = it.item
+            updateValues()
         }
-        cardGrid.addColumn { row -> "${row.card.name} x${row.number}" }.setHeader("Card name")
+        cardGrid.addColumn { row -> "${row.card.name} x${row.number}" }.setHeader("Card name").setSortable(true)
         cardGrid.addComponentColumn { row ->
             val button = Button("Delete")
             button.addClickListener {
@@ -76,8 +76,10 @@ class DecksView @Autowired internal constructor(
     private fun updateValues() {
         deckGrid.setItems(decksController.listDecks())
         if (selectedDeck != null) {
+            cardLayout.isVisible = true
             val cardGridMap = decksController.buildCardRowMap(selectedDeck!!)
             cardGrid.setItems(cardGridMap.values)
+            standardLegalLabel.text = "Standard legal: " + decksController.isStandardLegal(selectedDeck!!)
         }
     }
 

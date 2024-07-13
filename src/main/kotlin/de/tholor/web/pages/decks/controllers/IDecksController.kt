@@ -12,6 +12,7 @@ interface IDecksController {
     fun addDeck(name: String)
     fun buildCardRowMap(it: Deck): MutableMap<Card, CardGridRow>
     fun deleteCardFromDeck(deck: Deck, card: Card)
+    fun isStandardLegal(deck: Deck): Boolean
 }
 
 data class CardGridRow(val card: Card, var number: Int)

@@ -9,4 +9,5 @@ interface IDeckService {
     fun save(vararg decks: Deck): MutableIterable<Deck>
     fun findDeckNameByID(id: Long): String
     fun deleteDeck(deck: Deck)
+    fun isStandardLegal(deck: Deck): Boolean
 }
