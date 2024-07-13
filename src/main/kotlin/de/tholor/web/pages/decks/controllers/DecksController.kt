@@ -29,4 +29,21 @@ class DecksController @Autowired internal constructor(
         val newDeck = Deck(-1, name)
         deckService.save(newDeck)
     }
+
+    override fun buildCardRowMap(it: Deck): MutableMap<Card, CardGridRow> {
+        val cardGridMap = mutableMapOf<Card, CardGridRow>()
+        it.cardList.forEach { it2 ->
+            if (cardGridMap[it2] == null) {
+                cardGridMap[it2] = CardGridRow(it2, 1)
+            } else {
+                cardGridMap[it2]?.number = cardGridMap[it2]?.number!! + 1
+            }
+        }
+        return cardGridMap
+    }
+
+    override fun deleteCardFromDeck(deck: Deck, card: Card) {
+        deck.cardList.remove(card)
+        deckService.save(deck)
+    }
 }

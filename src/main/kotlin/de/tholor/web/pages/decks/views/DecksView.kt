@@ -11,6 +11,7 @@ import com.vaadin.flow.router.BeforeEnterObserver
 import com.vaadin.flow.router.Route
 import de.tholor.web.model.Card
 import de.tholor.web.model.Deck
+import de.tholor.web.pages.decks.controllers.CardGridRow
 import de.tholor.web.pages.decks.controllers.IDecksController
 import de.tholor.web.shared.RootLayout
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,20 +27,31 @@ class DecksView @Autowired internal constructor(
     private val addDeckButton = Button("Add deck")
     private val addDeckLayout = HorizontalLayout(addDeckText, addDeckButton)
     private val deckLayout = VerticalLayout(deckGrid, addDeckLayout)
-    private val cardGrid = Grid<Card>()
+    private val cardGrid = Grid<CardGridRow>()
     private val addCardText = ComboBox<Card>()
     private val addCardButton = Button("Add card")
     private val addCardLayout = HorizontalLayout(addCardText, addCardButton)
     private val cardLayout = VerticalLayout(cardGrid, addCardLayout)
     private val content = HorizontalLayout(deckLayout, cardLayout)
+    private var selectedDeck: Deck? = null
 
     init {
         deckGrid.addColumn { deck -> deck.name }.setHeader("Deck")
         deckGrid.addItemClickListener {
-            cardGrid.setItems(it.item.cardList)
+            val cardGridMap = decksController.buildCardRowMap(it.item)
+            cardGrid.setItems(cardGridMap.values)
             cardLayout.isVisible = true
+            selectedDeck = it.item
         }
-        cardGrid.addColumn { card -> card.name }.setHeader("Card name")
+        cardGrid.addColumn { row -> "${row.card.name} x${row.number}" }.setHeader("Card name")
+        cardGrid.addComponentColumn { row ->
+            val button = Button("Delete")
+            button.addClickListener {
+                decksController.deleteCardFromDeck(selectedDeck!!, row.card)
+                updateValues()
+            }
+            button
+        }
         deckGrid.minWidth = "40%"
         content.minWidth = "80%"
         addDeckButton.addClickListener {
@@ -50,10 +62,11 @@ class DecksView @Autowired internal constructor(
         addCardText.setItemLabelGenerator { card -> card.name }
         cardLayout.isVisible = false
         cardLayout.isPadding = false
+        deckLayout.isPadding = false
         content.isMargin = true
         addCardButton.addClickListener {
-            if (addCardText.value != null) {
-                decksController.addCardToDeck(deckGrid.selectedItems.first(), addCardText.value)
+            if (addCardText.value != null && selectedDeck != null) {
+                decksController.addCardToDeck(selectedDeck!!, addCardText.value)
                 updateValues()
             }
         }
@@ -62,8 +75,10 @@ class DecksView @Autowired internal constructor(
 
     private fun updateValues() {
         deckGrid.setItems(decksController.listDecks())
-        if (deckGrid.selectedItems.isNotEmpty())
-            cardGrid.setItems(deckGrid.selectedItems.first().cardList)
+        if (selectedDeck != null) {
+            val cardGridMap = decksController.buildCardRowMap(selectedDeck!!)
+            cardGrid.setItems(cardGridMap.values)
+        }
     }
 
     override fun beforeEnter(event: BeforeEnterEvent?) {

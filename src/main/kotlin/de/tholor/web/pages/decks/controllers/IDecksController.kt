@@ -10,4 +10,8 @@ interface IDecksController {
     fun listCards(): List<Card>
     fun addCardToDeck(deck: Deck, card: Card)
     fun addDeck(name: String)
+    fun buildCardRowMap(it: Deck): MutableMap<Card, CardGridRow>
+    fun deleteCardFromDeck(deck: Deck, card: Card)
 }
+
+data class CardGridRow(val card: Card, var number: Int)
