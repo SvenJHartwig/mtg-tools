@@ -1,8 +1,11 @@
 package de.tholor.web.stats
 
+import de.tholor.web.mockComponents.MockCardRepo
 import de.tholor.web.mockComponents.MockDeckRepo
+import de.tholor.web.mockComponents.MockLegalityRepo
 import de.tholor.web.mockComponents.MockStatsRepo
 import de.tholor.web.model.Deck
+import de.tholor.web.model.services.CardService
 import de.tholor.web.model.services.DeckService
 import de.tholor.web.pages.stats.components.DeckScoreModel
 import de.tholor.web.pages.stats.controllers.StatsController
@@ -15,7 +18,8 @@ class StatsTests {
 
     private val deckRepository = MockDeckRepo()
     private val statsRepository = MockStatsRepo()
-    private val statsController = StatsController(DeckService(deckRepository, statsRepository))
+    private val statsController =
+        StatsController(DeckService(deckRepository, statsRepository, CardService(MockCardRepo(), MockLegalityRepo())))
 
     @Test
     fun testListDecks() {
