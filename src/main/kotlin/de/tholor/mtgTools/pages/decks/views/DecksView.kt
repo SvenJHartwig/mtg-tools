@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.router.BeforeEnterEvent
 import com.vaadin.flow.router.BeforeEnterObserver
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import de.tholor.mtgTools.model.Card
 import de.tholor.mtgTools.model.Deck
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired
 
 
 @Route(value = "decks")
+@PageTitle("Mtg tools - Decks")
 class DecksView @Autowired internal constructor(
     private val decksController: IDecksController
 ) : RootLayout(),

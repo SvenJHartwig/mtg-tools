@@ -7,6 +7,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.NumberField
 import com.vaadin.flow.router.BeforeEnterEvent
 import com.vaadin.flow.router.BeforeEnterObserver
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import de.tholor.mtgTools.model.Deck
 import de.tholor.mtgTools.pages.stats.components.DeckDetailsDialog
@@ -15,7 +16,8 @@ import de.tholor.mtgTools.pages.stats.controllers.IStatsController
 import de.tholor.mtgTools.shared.RootLayout
 import org.springframework.beans.factory.annotation.Autowired
 
-@Route("Stats")
+@Route("stats")
+@PageTitle("Mtg tools - Stats")
 class StatsView @Autowired internal constructor(private val statsController: IStatsController) : RootLayout(),
     BeforeEnterObserver {
     private val statsGrid = Grid<Deck>()
