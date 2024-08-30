@@ -4,13 +4,15 @@ import de.tholor.mtgTools.model.Card
 import de.tholor.mtgTools.model.Deck
 import de.tholor.mtgTools.model.services.CardService
 import de.tholor.mtgTools.model.services.IDeckService
+import de.tholor.mtgTools.shared.security.ISecurityService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 
 @Controller
 class DecksController @Autowired internal constructor(
     private val deckService: IDeckService,
-    private val cardService: CardService
+    private val cardService: CardService,
+    private val securityService: ISecurityService
 ) : IDecksController {
     override fun listDecks(): List<Deck> {
         return deckService.listDecks()
@@ -26,7 +28,10 @@ class DecksController @Autowired internal constructor(
     }
 
     override fun addDeck(name: String) {
-        val newDeck = Deck(-1, name)
+        if (securityService.authenticatedUser == null) {
+            return
+        }
+        val newDeck = Deck(-1, name, securityService.authenticatedUser!!.username)
         deckService.save(newDeck)
     }
 

@@ -11,6 +11,10 @@ class MockDeckRepo : DeckRepository {
         return emptyList()
     }
 
+    override fun findAllByUserName(name: String): List<Deck> {
+        return deckList
+    }
+
     override fun <S : Deck?> save(entity: S & Any): S & Any {
         if (entity.instanceOf(Deck::class) && deckList.none { deck -> deck.name == entity.name }) {
             deckList.add(entity)
@@ -23,7 +27,7 @@ class MockDeckRepo : DeckRepository {
             if (entity != null) {
                 if (entity.instanceOf(Deck::class) && deckList.none { deck -> deck.name == entity.name }) {
                     if (entity.id.toInt() == -1) {
-                        deckList.add(Deck(deckList.size + 1.toLong(), entity.name))
+                        deckList.add(Deck(deckList.size + 1.toLong(), entity.name, "test"))
                     } else {
                         deckList.add(entity)
                     }

@@ -9,7 +9,8 @@ class Deck(
     @Id
     @GeneratedValue
     val id: Long,
-    val name: String
+    val name: String,
+    val userName: String
 ) : Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     var cardList: MutableList<Card> = mutableListOf()
