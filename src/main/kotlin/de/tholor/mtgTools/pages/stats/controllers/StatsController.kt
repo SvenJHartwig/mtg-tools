@@ -3,12 +3,16 @@ package de.tholor.mtgTools.pages.stats.controllers
 import de.tholor.mtgTools.model.Deck
 import de.tholor.mtgTools.model.services.DeckService
 import de.tholor.mtgTools.pages.stats.components.DeckScoreModel
+import de.tholor.mtgTools.shared.security.ISecurityService
 import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 
 @Controller
-class StatsController @Autowired internal constructor(val deckService: DeckService) : IStatsController {
+class StatsController @Autowired internal constructor(
+    val deckService: DeckService,
+    private val securityService: ISecurityService
+) : IStatsController {
     override fun listDecks(): List<Deck> {
         return deckService.listDecks()
     }
@@ -48,7 +52,11 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
         val result = allNames
             .parallelStream()
             .map { name ->
-                existingDecks.find { deck: Deck -> deck.name == name } ?: Deck(-1, name)
+                existingDecks.find { deck: Deck -> deck.name == name } ?: Deck(
+                    -1,
+                    name,
+                    securityService.authenticatedUser!!.username
+                )
             }
             .toList()
         return result
@@ -63,7 +71,7 @@ class StatsController @Autowired internal constructor(val deckService: DeckServi
             losses += entry.value.losses
             draws += entry.value.draws
         }
-        return Deck.StatsAgainst(0, Deck(-1, ""), wins, losses, draws)
+        return Deck.StatsAgainst(0, Deck(-1, "", securityService.authenticatedUser!!.username), wins, losses, draws)
     }
 
     override fun findDeckNameByID(id: Long): String {

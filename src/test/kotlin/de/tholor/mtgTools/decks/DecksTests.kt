@@ -1,9 +1,6 @@
 package de.tholor.mtgTools.decks
 
-import de.tholor.mtgTools.mockComponents.MockCardRepo
-import de.tholor.mtgTools.mockComponents.MockDeckRepo
-import de.tholor.mtgTools.mockComponents.MockLegalityRepo
-import de.tholor.mtgTools.mockComponents.MockStatsRepo
+import de.tholor.mtgTools.mockComponents.*
 import de.tholor.mtgTools.model.Card
 import de.tholor.mtgTools.model.Deck
 import de.tholor.mtgTools.model.services.CardService
@@ -15,14 +12,14 @@ import org.junit.jupiter.api.Test
 
 class DecksTests {
     private val cardService = CardService(MockCardRepo(), MockLegalityRepo())
-    private val deckService = DeckService(MockDeckRepo(), MockStatsRepo(), cardService)
+    private val deckService = DeckService(MockDeckRepo(), MockStatsRepo(), cardService, MockSecurityService())
     private val decksController =
-        DecksController(deckService, cardService)
+        DecksController(deckService, cardService, MockSecurityService())
 
     @Test
     fun testDecksController() {
-        assertEquals(mutableMapOf<Card, CardGridRow>(), decksController.buildCardRowMap(Deck(-1, "Test")))
-        val deck = Deck(-1, "Test")
+        assertEquals(mutableMapOf<Card, CardGridRow>(), decksController.buildCardRowMap(Deck(-1, "Test", "test")))
+        val deck = Deck(-1, "Test", "test")
         deck.cardList = mutableListOf(Card(name = "Test1"))
         assertEquals(
             mutableMapOf(Pair(Card(name = "Test1"), CardGridRow(Card(name = "Test1"), 1))),
@@ -45,8 +42,8 @@ class DecksTests {
 
     @Test
     fun testIsStandardLegal() {
-        assertFalse(deckService.isStandardLegal(Deck(-1, "Test")))
-        val deck = Deck(-1, "Test")
+        assertFalse(deckService.isStandardLegal(Deck(-1, "Test", "test")))
+        val deck = Deck(-1, "Test", "test")
         deck.cardList = mutableListOf(Card(cardId = 4, name = "Island"))
         assertFalse(deckService.isStandardLegal(deck))
         for (i in 0..57) {

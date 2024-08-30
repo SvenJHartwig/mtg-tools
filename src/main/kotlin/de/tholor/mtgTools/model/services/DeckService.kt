@@ -3,6 +3,7 @@ package de.tholor.mtgTools.model.services
 import de.tholor.mtgTools.model.Deck
 import de.tholor.mtgTools.model.repositories.DeckRepository
 import de.tholor.mtgTools.model.repositories.StatsRepository
+import de.tholor.mtgTools.shared.security.ISecurityService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -10,11 +11,15 @@ import org.springframework.stereotype.Service
 class DeckService @Autowired internal constructor(
     private val deckRepository: DeckRepository,
     private val statsRepository: StatsRepository,
-    private val cardService: CardService
+    private val cardService: CardService,
+    private val securityService: ISecurityService
 ) : IDeckService {
 
     override fun listDecks(): List<Deck> {
-        return deckRepository.findAll().toList()
+        if (securityService.authenticatedUser == null) {
+            return listOf()
+        }
+        return deckRepository.findAllByUserName(securityService.authenticatedUser!!.username).toList()
     }
 
     override fun save(vararg decks: Deck): MutableIterable<Deck> {
