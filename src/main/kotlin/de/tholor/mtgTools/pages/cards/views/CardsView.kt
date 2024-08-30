@@ -10,14 +10,18 @@ import com.vaadin.flow.router.Route
 import de.tholor.mtgTools.model.Card
 import de.tholor.mtgTools.pages.cards.controllers.ICardsController
 import de.tholor.mtgTools.shared.RootLayout
+import de.tholor.mtgTools.shared.security.SecurityService
+import jakarta.annotation.security.PermitAll
 import org.springframework.beans.factory.annotation.Autowired
 
 
 @Route(value = "cards")
 @PageTitle("Mtg tools - Cards")
+@PermitAll
 class CardsView @Autowired internal constructor(
-    private val cardsController: ICardsController
-) : RootLayout() {
+    private val cardsController: ICardsController,
+    private val securityService: SecurityService
+) : RootLayout(securityService) {
     private val cardsGrid = Grid<Card>()
     private val searchStringBox = TextField()
     private val checkCardButton = Button("Check")

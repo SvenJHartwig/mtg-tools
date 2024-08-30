@@ -16,14 +16,18 @@ import de.tholor.mtgTools.model.Deck
 import de.tholor.mtgTools.pages.decks.controllers.CardGridRow
 import de.tholor.mtgTools.pages.decks.controllers.IDecksController
 import de.tholor.mtgTools.shared.RootLayout
+import de.tholor.mtgTools.shared.security.SecurityService
+import jakarta.annotation.security.PermitAll
 import org.springframework.beans.factory.annotation.Autowired
 
 
 @Route(value = "decks")
 @PageTitle("Mtg tools - Decks")
+@PermitAll
 class DecksView @Autowired internal constructor(
-    private val decksController: IDecksController
-) : RootLayout(),
+    private val decksController: IDecksController,
+    private val securityService: SecurityService
+) : RootLayout(securityService),
     BeforeEnterObserver {
     private val deckGrid = Grid<Deck>()
     private val addDeckText = TextField()

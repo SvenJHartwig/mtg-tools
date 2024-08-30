@@ -14,11 +14,17 @@ import de.tholor.mtgTools.pages.stats.components.DeckDetailsDialog
 import de.tholor.mtgTools.pages.stats.components.DeckScore
 import de.tholor.mtgTools.pages.stats.controllers.IStatsController
 import de.tholor.mtgTools.shared.RootLayout
+import de.tholor.mtgTools.shared.security.SecurityService
+import jakarta.annotation.security.PermitAll
 import org.springframework.beans.factory.annotation.Autowired
 
 @Route("stats")
 @PageTitle("Mtg tools - Stats")
-class StatsView @Autowired internal constructor(private val statsController: IStatsController) : RootLayout(),
+@PermitAll
+class StatsView @Autowired internal constructor(
+    private val statsController: IStatsController,
+    private val securityService: SecurityService
+) : RootLayout(securityService),
     BeforeEnterObserver {
     private val statsGrid = Grid<Deck>()
     private val numberOfDecks = NumberField()
